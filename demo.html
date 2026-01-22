@@ -300,9 +300,14 @@
 		</footer>
 
 		<!-- 引入简繁转换库 -->
-		<script src="./simplified-traditional-character-conversion.js"></script>
+		<script src="./chinese-converter.min.js"></script>
 
 		<script>
+			//开启debug
+			STC.config({
+				debug: true
+			});
+
 			// 等待DOM加载完成
 			document.addEventListener('DOMContentLoaded', function() {
 				// 获取元素
@@ -349,7 +354,6 @@
 							// 保存用户偏好到localStorage
 							saveLanguagePreference('traditional');
 
-							console.log('已转换为繁体中文');
 						} catch (error) {
 							console.error('简转繁转换失败:', error);
 							hideLoading();
@@ -380,8 +384,6 @@
 
 							// 保存用户偏好到localStorage
 							saveLanguagePreference('simplified');
-
-							console.log('已转换为简体中文');
 						} catch (error) {
 							console.error('繁转简转换失败:', error);
 							hideLoading();
@@ -444,32 +446,32 @@
 
 				// 扩展字典，添加一些经济开发区相关的词汇
 				if (typeof STC !== 'undefined') {
-					// STC.extendDictionary({
-					// 	'开发区': '開發區',
-					// 	'经济开发区': '經濟開發區',
-					// 	'经济技术开发区': '經濟技術開發區',
-					// 	'高新技术': '高新技術',
-					// 	'高新技术产业开发区': '高新技術產業開發區',
-					// 	'产业链': '產業鏈',
-					// 	'税收': '稅收',
-					// 	'海关': '海關',
-					// 	'投资': '投資',
-					// 	'外资': '外資',
-					// 	'营商环境': '營商環境',
-					// 	'放管服': '放管服',
-					// 	'战略性新兴产业': '戰略性新興產業',
-					// 	'改革开放': '改革開放',
-					// 	'高质量发展': '高質量發展',
-					// 	'数字经济': '數字經濟',
-					// 	'实体经济': '實體經濟',
-					// 	'引擎': '引擎',
-					// 	'平台': '平台',
-					// 	'协同效应': '協同效應',
-					// 	'竞争力': '競爭力',
-					// 	'转型升级': '轉型升級',
-					// 	'创新驱动': '創新驅動',
-					// 	'绿色发展': '綠色發展'
-					// });
+					STC.extendDictionary({
+						'开发区': '開發區',
+						'经济开发区': '經濟開發區',
+						'经济技术开发区': '經濟技術開發區',
+						'高新技术': '高新技術',
+						'高新技术产业开发区': '高新技術產業開發區',
+						'产业链': '產業鏈',
+						'税收': '稅收',
+						'海关': '海關',
+						'投资': '投資',
+						'外资': '外資',
+						'营商环境': '營商環境',
+						'放管服': '放管服',
+						'战略性新兴产业': '戰略性新興產業',
+						'改革开放': '改革開放',
+						'高质量发展': '高質量發展',
+						'数字经济': '數字經濟',
+						'实体经济': '實體經濟',
+						'引擎': '引擎',
+						'平台': '平台',
+						'协同效应': '協同效應',
+						'竞争力': '競爭力',
+						'转型升级': '轉型升級',
+						'创新驱动': '創新驅動',
+						'绿色发展': '綠色發展'
+					});
 
 					console.log('简繁转换库已加载，版本:', STC.version);
 					console.log('字典大小:', STC.getDictionarySize());
