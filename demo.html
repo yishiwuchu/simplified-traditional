@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="utf-8">
+		<title>经济开发区 - 简繁切换</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+				font-family: 'Microsoft JhengHei', '微软雅黑', sans-serif;
+			}
+
+			body {
+				background-color: #f5f7fa;
+				color: #333;
+				line-height: 1.6;
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 20px;
+			}
+
+			/* 语言切换按钮样式 */
+			.language-switcher {
+				position: fixed;
+				top: 20px;
+				right: 20px;
+				z-index: 1000;
+				display: flex;
+				gap: 10px;
+				background: white;
+				padding: 10px 15px;
+				border-radius: 30px;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			}
+
+			.lang-btn {
+				padding: 8px 20px;
+				border: 2px solid #1a6dcc;
+				background: white;
+				color: #1a6dcc;
+				border-radius: 20px;
+				cursor: pointer;
+				font-weight: bold;
+				transition: all 0.3s;
+			}
+
+			.lang-btn.active {
+				background: #1a6dcc;
+				color: white;
+			}
+
+			.lang-btn:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 4px 8px rgba(26, 109, 204, 0.2);
+			}
+
+			header {
+				text-align: center;
+				padding: 40px 0;
+				background: linear-gradient(135deg, #1a6dcc 0%, #0d4d9c 100%);
+				color: white;
+				border-radius: 10px;
+				margin: 20px 0 40px;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			}
+
+			h1 {
+				font-size: 2.5rem;
+				margin-bottom: 15px;
+			}
+
+			.subtitle {
+				font-size: 1.2rem;
+				opacity: 0.9;
+				margin-bottom: 20px;
+			}
+
+			.content {
+				background: white;
+				border-radius: 10px;
+				padding: 40px;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+				margin-bottom: 30px;
+			}
+
+			h2 {
+				color: #1a6dcc;
+				margin: 25px 0 15px;
+				padding-bottom: 10px;
+				border-bottom: 2px solid #eaeaea;
+			}
+
+			h2:first-child {
+				margin-top: 0;
+			}
+
+			p {
+				margin-bottom: 20px;
+				text-align: justify;
+				line-height: 1.8;
+			}
+
+			.highlight {
+				background-color: #e7f3ff;
+				padding: 20px;
+				border-radius: 8px;
+				border-left: 4px solid #1a6dcc;
+				margin: 25px 0;
+			}
+
+			.features {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 20px;
+				margin: 30px 0;
+			}
+
+			.feature-card {
+				flex: 1;
+				min-width: 250px;
+				background: #f8f9fa;
+				padding: 25px;
+				border-radius: 8px;
+				border-top: 4px solid #1a6dcc;
+			}
+
+			.feature-card h3 {
+				color: #1a6dcc;
+				margin-bottom: 10px;
+			}
+
+			.stats {
+				display: flex;
+				justify-content: space-around;
+				flex-wrap: wrap;
+				margin: 40px 0;
+				padding: 30px;
+				background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+				border-radius: 10px;
+			}
+
+			.stat-item {
+				text-align: center;
+				padding: 20px;
+			}
+
+			.stat-value {
+				font-size: 2.5rem;
+				font-weight: bold;
+				color: #1a6dcc;
+				display: block;
+			}
+
+			.stat-label {
+				font-size: 1rem;
+				color: #666;
+			}
+
+			footer {
+				text-align: center;
+				margin-top: 40px;
+				color: #666;
+				padding-top: 20px;
+				border-top: 1px solid #eaeaea;
+				font-size: 14px;
+			}
+
+			@media (max-width: 768px) {
+				.language-switcher {
+					position: static;
+					justify-content: center;
+					margin-bottom: 20px;
+					border-radius: 10px;
+				}
+
+				h1 {
+					font-size: 2rem;
+				}
+
+				.content {
+					padding: 25px;
+				}
+
+				.features {
+					flex-direction: column;
+				}
+			}
+
+			/* 加载动画 */
+			.loading {
+				display: none;
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(255, 255, 255, 0.8);
+				z-index: 9999;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+			}
+
+			.loading.show {
+				display: flex;
+			}
+
+			.spinner {
+				width: 40px;
+				height: 40px;
+				border: 4px solid #f3f3f3;
+				border-top: 4px solid #1a6dcc;
+				border-radius: 50%;
+				animation: spin 1s linear infinite;
+				margin-bottom: 10px;
+			}
+
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 加载动画 -->
+		<div class="loading" id="loading">
+			<div class="spinner"></div>
+			<div>正在切换语言...</div>
+		</div>
+
+		<!-- 语言切换器 -->
+		<div class="language-switcher">
+			<button id="simplifiedBtn" class="lang-btn active">简体中文</button>
+			<button id="traditionalBtn" class="lang-btn">繁體中文</button>
+		</div>
+
+		<header>
+			<h1>经济开发区</h1>
+			<p class="subtitle">推动区域经济增长的重要引擎</p>
+		</header>
+
+		<div class="content">
+			<h2>经济开发区简介</h2>
+			<p>经济开发区是中华人民共和国为促进经济发展而设立的特殊区域，通常提供税收优惠、基础设施支持等政策。这些开发区吸引了大量国内外投资，促进了产业升级和技术创新。</p>
+
+			<div class="highlight">
+				<p>经济技术开发区是中国改革开放的重要产物，最早于1984年在大连、秦皇岛、天津等地设立。经过数十年的发展，各类开发区已成为中国经济发展的重要平台。</p>
+			</div>
+
+			<h2>开发区主要特点</h2>
+			<div class="features">
+				<div class="feature-card">
+					<h3>政策优势</h3>
+					<p>开发区通常享有税收减免、土地使用优惠、海关便利等特殊政策，为企业创造良好的投资环境。</p>
+				</div>
+				<div class="feature-card">
+					<h3>产业集聚</h3>
+					<p>同类型企业集中分布，形成产业链协同效应，降低企业运营成本，提高整体竞争力。</p>
+				</div>
+				<div class="feature-card">
+					<h3>创新驱动</h3>
+					<p>注重科技创新和研发投入，吸引高新技术企业入驻，推动产业转型升级。</p>
+				</div>
+			</div>
+
+			<h2>发展成就</h2>
+			<p>自设立以来，经济开发区取得了显著成就。截至2022年，全国共有国家级经济技术开发区230个，国家级高新技术产业开发区173个，成为推动工业化、城镇化进程和区域协调发展的重要力量。</p>
+
+			<p>开发区还积极探索制度创新，优化营商环境，推行"放管服"改革，为企业提供一站式服务，大幅提升了投资便利化水平。现代开发区注重高质量发展，聚焦新一代信息技术、高端装备制造、新能源、生物医药等战略性新兴产业。</p>
+
+			<div class="stats">
+				<div class="stat-item">
+					<span class="stat-value">230+</span>
+					<span class="stat-label">国家级经济技术开发区</span>
+				</div>
+				<div class="stat-item">
+					<span class="stat-value">173+</span>
+					<span class="stat-label">国家级高新技术产业开发区</span>
+				</div>
+				<div class="stat-item">
+					<span class="stat-value">40%</span>
+					<span class="stat-label">占全国实际使用外资比重</span>
+				</div>
+			</div>
+
+			<h2>未来展望</h2>
+			<p>面向未来，经济开发区将继续深化改革开放，推动高质量发展。通过打造国际化、法治化、便利化的营商环境，建设具有全球竞争力的现代化产业体系。</p>
+
+			<p>开发区将更加注重创新驱动和绿色发展，推动数字经济与实体经济深度融合，培育新的经济增长点，为实现经济高质量发展做出更大贡献。</p>
+		</div>
+
+		<footer>
+			<p>经济开发区简繁转换演示页面 &copy; 2023 | 基于简繁转换库构建</p>
+		</footer>
+
+		<!-- 引入简繁转换库 -->
+		<script src="./simplified-traditional-character-conversion.js"></script>
+
+		<script>
+			// 等待DOM加载完成
+			document.addEventListener('DOMContentLoaded', function() {
+				// 获取元素
+				const simplifiedBtn = document.getElementById('simplifiedBtn');
+				const traditionalBtn = document.getElementById('traditionalBtn');
+				const loading = document.getElementById('loading');
+
+				// 当前语言状态（默认为简体）
+				let currentLanguage = 'simplified';
+
+				// 添加点击事件监听器
+				simplifiedBtn.addEventListener('click', function() {
+					if (currentLanguage !== 'simplified') {
+						convertToSimplified();
+					}
+				});
+
+				traditionalBtn.addEventListener('click', function() {
+					if (currentLanguage !== 'traditional') {
+						convertToTraditional();
+					}
+				});
+
+				// 简转繁函数
+				function convertToTraditional() {
+					// 显示加载动画
+					showLoading();
+
+					// 使用setTimeout让浏览器有时间渲染加载动画
+					setTimeout(function() {
+						try {
+							// 转换整个页面
+							STC.convertBodyToTraditional();
+
+							// 更新语言状态
+							currentLanguage = 'traditional';
+
+							// 更新按钮状态
+							updateButtonState();
+
+							// 隐藏加载动画
+							hideLoading();
+
+							// 保存用户偏好到localStorage
+							saveLanguagePreference('traditional');
+
+							console.log('已转换为繁体中文');
+						} catch (error) {
+							console.error('简转繁转换失败:', error);
+							hideLoading();
+							alert('转换失败，请刷新页面重试');
+						}
+					}, 50);
+				}
+
+				// 繁转简函数
+				function convertToSimplified() {
+					// 显示加载动画
+					showLoading();
+
+					// 使用setTimeout让浏览器有时间渲染加载动画
+					setTimeout(function() {
+						try {
+							// 转换整个页面
+							STC.convertBodyToSimplified();
+
+							// 更新语言状态
+							currentLanguage = 'simplified';
+
+							// 更新按钮状态
+							updateButtonState();
+
+							// 隐藏加载动画
+							hideLoading();
+
+							// 保存用户偏好到localStorage
+							saveLanguagePreference('simplified');
+
+							console.log('已转换为简体中文');
+						} catch (error) {
+							console.error('繁转简转换失败:', error);
+							hideLoading();
+							alert('转换失败，请刷新页面重试');
+						}
+					}, 50);
+				}
+
+				// 更新按钮状态
+				function updateButtonState() {
+					if (currentLanguage === 'simplified') {
+						simplifiedBtn.classList.add('active');
+						traditionalBtn.classList.remove('active');
+					} else {
+						simplifiedBtn.classList.remove('active');
+						traditionalBtn.classList.add('active');
+					}
+				}
+
+				// 显示加载动画
+				function showLoading() {
+					if (loading) {
+						loading.classList.add('show');
+					}
+				}
+
+				// 隐藏加载动画
+				function hideLoading() {
+					if (loading) {
+						loading.classList.remove('show');
+					}
+				}
+
+				// 保存语言偏好到localStorage
+				function saveLanguagePreference(lang) {
+					try {
+						localStorage.setItem('preferredLanguage', lang);
+					} catch (e) {
+						console.log('无法保存语言偏好到localStorage');
+					}
+				}
+
+				// 从localStorage读取语言偏好
+				function loadLanguagePreference() {
+					try {
+						const savedLang = localStorage.getItem('preferredLanguage');
+						if (savedLang === 'traditional') {
+							// 如果用户之前选择了繁体，自动转换
+							setTimeout(function() {
+								convertToTraditional();
+							}, 100);
+						}
+					} catch (e) {
+						console.log('无法读取语言偏好');
+					}
+				}
+
+				// 页面加载时读取语言偏好
+				loadLanguagePreference();
+
+				// 扩展字典，添加一些经济开发区相关的词汇
+				if (typeof STC !== 'undefined') {
+					// STC.extendDictionary({
+					// 	'开发区': '開發區',
+					// 	'经济开发区': '經濟開發區',
+					// 	'经济技术开发区': '經濟技術開發區',
+					// 	'高新技术': '高新技術',
+					// 	'高新技术产业开发区': '高新技術產業開發區',
+					// 	'产业链': '產業鏈',
+					// 	'税收': '稅收',
+					// 	'海关': '海關',
+					// 	'投资': '投資',
+					// 	'外资': '外資',
+					// 	'营商环境': '營商環境',
+					// 	'放管服': '放管服',
+					// 	'战略性新兴产业': '戰略性新興產業',
+					// 	'改革开放': '改革開放',
+					// 	'高质量发展': '高質量發展',
+					// 	'数字经济': '數字經濟',
+					// 	'实体经济': '實體經濟',
+					// 	'引擎': '引擎',
+					// 	'平台': '平台',
+					// 	'协同效应': '協同效應',
+					// 	'竞争力': '競爭力',
+					// 	'转型升级': '轉型升級',
+					// 	'创新驱动': '創新驅動',
+					// 	'绿色发展': '綠色發展'
+					// });
+
+					console.log('简繁转换库已加载，版本:', STC.version);
+					console.log('字典大小:', STC.getDictionarySize());
+				}
+			});
+		</script>
+	</body>
+</html>
