@@ -29,7 +29,13 @@ A lightweight JavaScript library for bidirectional conversion between Simplified
 ### Direct Script Include
 ```html
 <script src="chinese-converter.min.js"></script>
-``` 
+```
+### Js Delive
+```html
+<script src="https://cdn.jsdelivr.net/gh/yishiwuchu/simplified-traditional@main/chinese-converter.min.js">
+</script>
+```
+
 ## Global Access
 ### After including the script, the library is available globally:
 
