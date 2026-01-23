@@ -359,7 +359,7 @@ function updateDictionaryWithReload(newMappings) {
 
 ### Browser Compatibility
 The library is compatible with:
-- **Internet Explorer 10+**
+- **Internet Explorer 9+**
 - **Edge (all versions)**
 - **Chrome 23+**
 - **Firefox 21+**
