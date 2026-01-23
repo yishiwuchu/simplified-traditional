@@ -1,6 +1,6 @@
 # SimplifiedTraditionalConverter
 
-A lightweight JavaScript library for converting between Simplified and Traditional Chinese characters, with full support for IE10+ browsers.
+A lightweight JavaScript library for converting between Simplified and Traditional Chinese characters, with full support for IE9+ browsers.
 
 ## Features
 
