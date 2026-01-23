@@ -17,7 +17,7 @@ A lightweight JavaScript library for converting between Simplified and Tradition
 ### 🛠️ Utilities
 - **Dictionary Management**: Extend or modify conversion dictionary
 - **Version Information**: Built-in version tracking
-- **Browser Compatibility**: Works on IE10+ and all modern browsers
+- **Browser Compatibility**: Works on IE9+ and all modern browsers
 
 ## Installation
 
